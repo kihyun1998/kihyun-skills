@@ -17,7 +17,7 @@ single source of truth; skills become active by symlinking them into
 Symlink every skill in this repo into `~/.claude/skills`:
 
 ```sh
-# Windows (PowerShell) — needs Developer Mode or an elevated shell to create symlinks
+# Windows (PowerShell)
 powershell -File .\scripts\install-skills.ps1
 
 # macOS / Linux / WSL / git-bash
@@ -25,8 +25,10 @@ powershell -File .\scripts\install-skills.ps1
 ```
 
 Both scripts scan the repo for every folder containing a `SKILL.md`, so new
-skills are picked up automatically on re-run. Because they create symlinks
-(not copies), edits made in this repo are live in Claude Code immediately.
+skills are picked up automatically on re-run. They create links — a directory
+junction on Windows, a symlink on Unix — not copies, so edits made in this
+repo are live in Claude Code immediately. No Developer Mode or elevation is
+needed.
 
 ## Adding a skill
 

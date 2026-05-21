@@ -6,7 +6,7 @@ Guidance for AI agents working in this repository.
 
 This repo is a personal collection of Claude Code skills. Each top-level
 directory containing a `SKILL.md` is one skill; `scripts/install-skills.ps1`
-and `scripts/install-skills.sh` symlink them into `~/.claude/skills`. See
+and `scripts/install-skills.sh` link them into `~/.claude/skills`. See
 `README.md` for details.
 
 ## Agent skills

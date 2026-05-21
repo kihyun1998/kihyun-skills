@@ -1,17 +1,18 @@
 #Requires -Version 5.1
 <#
 .SYNOPSIS
-  Symlink every skill in this repo into ~/.claude/skills so Claude Code loads them.
+  Link every skill in this repo into ~/.claude/skills so Claude Code loads them.
 
 .DESCRIPTION
   A "skill" is any top-level directory in this repo that contains a SKILL.md.
-  For each one, a directory symbolic link is created at
+  For each one, a directory junction is created at
   $env:USERPROFILE\.claude\skills\<skill-name> pointing back into this repo.
   The repo stays the single source of truth; edits here are live immediately.
 
-  Creating symlinks on Windows requires either:
-    - Developer Mode enabled (Settings > Privacy & security > For developers), or
-    - running this script from an elevated (Administrator) PowerShell.
+  This uses a directory junction rather than a symbolic link: junctions need
+  no Developer Mode and no Administrator elevation. The only constraint is
+  that the repo must live on a local drive (junctions cannot span to network
+  locations) -- which is the normal case.
 
 .EXAMPLE
   powershell -File .\scripts\install-skills.ps1
@@ -43,8 +44,8 @@ foreach ($skill in $skillDirs) {
 
     if (Test-Path $link) {
         $item = Get-Item -LiteralPath $link -Force
-        if ($item.LinkType -eq 'SymbolicLink') {
-            Write-Host "  skip  $($skill.Name) - symlink already exists"
+        if ($item.LinkType -in 'Junction', 'SymbolicLink') {
+            Write-Host "  skip  $($skill.Name) - link already exists"
         } else {
             Write-Warning "  skip  $($skill.Name) - a real folder exists at $link; remove it first"
         }
@@ -52,12 +53,11 @@ foreach ($skill in $skillDirs) {
     }
 
     try {
-        New-Item -ItemType SymbolicLink -Path $link -Target $skill.FullName -ErrorAction Stop | Out-Null
+        New-Item -ItemType Junction -Path $link -Target $skill.FullName -ErrorAction Stop | Out-Null
         Write-Host "  link  $($skill.Name) -> $($skill.FullName)"
         $linked++
     } catch {
         Write-Warning "  fail  $($skill.Name) - $($_.Exception.Message)"
-        Write-Warning '        Enable Developer Mode or run this script as Administrator, then retry.'
     }
 }
 
