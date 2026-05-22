@@ -73,13 +73,18 @@ body {
   min-height: 100vh;
 }
 
+/* grid-row pinned on all four .layout children — without it, sparse
+   auto-placement drops main onto the row below .toc (a col 3 → col 2
+   backward step forces a new row once the TOC is present, ≥1100px). */
 main {
   grid-column: 2;
+  grid-row: 2;
   padding: 3rem 2rem 6rem;
 }
 
 .toc {
   grid-column: 3;
+  grid-row: 2;
   padding: 3rem 1.5rem;
   position: sticky;
   top: 0;
@@ -126,6 +131,7 @@ main {
 
 .page-header {
   grid-column: 2 / 4;
+  grid-row: 1;
   padding: 3rem 2rem 1rem;
   border-bottom: 1px solid var(--border);
 }
@@ -450,6 +456,7 @@ tr:hover td { background: var(--surface-2); }
 /* ──────────────── FOOTER ──────────────── */
 .page-footer {
   grid-column: 2 / 4;
+  grid-row: 3;
   margin: 4rem 2rem 2rem;
   padding-top: 2rem;
   border-top: 1px solid var(--border);
