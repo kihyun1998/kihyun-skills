@@ -90,16 +90,25 @@ section for non-Rework verdicts>
 The line `**Verdict:** <X>` is the marker. The loop counter in step 4 counts
 comments whose verdict is `Rework`.
 
-## Resolving the linked PR — `gh` recipe
+## Resolving the issue and its PR — `gh` recipe
 
 ```sh
-# PRs that close issue N (cross-reference via the timeline / linkage)
+# Fetch the issue itself: its body is the spec, its comments feed the
+# loop counter (step 4).
 gh issue view <N> --json number,title,body,comments
 
-# the PR's base + head, then the merge-base
+# Resolve issue N -> the PR that closes it. A PR whose body carries a
+# closing keyword ("Closes #N") leaves a cross-reference on the issue
+# timeline; the source of that event is the PR.
+gh api "repos/{owner}/{repo}/issues/<N>/timeline" --paginate \
+  --jq 'last(.[] | select(.event == "cross-referenced"
+        and .source.issue.pull_request) | .source.issue.number)'
+
+# From that PR number: its base + head, then the merge-base — the
+# fixed point passed to `review`.
 gh pr view <PR> --json number,headRefName,baseRefName,headRefOid
 git merge-base <baseRef> <headRef>
 ```
 
-The merge-base is the **fixed point** passed to `review`. If `gh` reports no
-linked PR, stop — the gate has nothing to judge.
+The merge-base is the **fixed point** passed to `review`. If the timeline
+shows no cross-referencing PR, stop — the gate has nothing to judge.

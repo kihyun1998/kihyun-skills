@@ -11,6 +11,7 @@ single source of truth; skills become active by symlinking them into
 | Skill | What it does |
 | --- | --- |
 | [`to-html`](to-html/) | Convert a markdown file — or content already in the conversation — into a single self-contained, styled HTML file: inline CSS, sticky table of contents, callouts, premium layout blocks. No build step. |
+| [`gate`](gate/) | The Acceptance Gate — review an AFK agent's finished work on an issue, render a verdict (Pass / Rework / Respec / Escalate) with the matching next action, and run it on the tracker once you approve. Delegates the diff review to the `review` skill. |
 
 ## Install
 
